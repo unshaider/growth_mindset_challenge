@@ -1,0 +1,10 @@
+[project]
+name = "growth-mindset-challenge"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "plotly-express>=0.4.1",
+    "streamlit>=1.43.1",
+]

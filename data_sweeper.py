@@ -4,7 +4,8 @@ import pandas as pd
 import plotly.express as px
 from io import BytesIO
 
-st.set_page_config(page_title="Data Sweeper Pro", layout="wide")
+st.set_page_config(page_title="Data Sweeper Pro", page_icon="📊")
+
 # Custom CSS styling
 st.markdown("""
 <style>
@@ -25,8 +26,9 @@ uploaded_files = st.file_uploader("Upload CSV/Excel files",
                                  accept_multiple_files=True)
 
 if uploaded_files:
-    # Initialize progress bar
+    # Initialize progress bar and dataframe list
     progress_bar = st.progress(0)
+    dfs = []
     
     # Process each file
     for i, uploaded_file in enumerate(uploaded_files):
@@ -133,8 +135,9 @@ if uploaded_files:
                     file_name=f"converted_{uploaded_file.name.split('.')[0]}.{export_format.lower()}",
                     mime=mime_type
                 )
-
+        dfs.append(df)
         # Update progress bar
+        progress_bar.progress((i+1)/len(uploaded_files))
         progress_bar.progress((i+1)/len(uploaded_files))
     
     # File comparison feature
@@ -166,24 +169,10 @@ if uploaded_files:
         """
         st.markdown(report)
 
-    # Merge files option
-    if st.checkbox("🧩 Merge All Files"):
-        all_dfs = [pd.read_csv(file) for file in uploaded_files]
-        merged_df = pd.concat(all_dfs)
-        st.subheader("Merged Data Preview")
-        st.dataframe(merged_df)
-        
-        buffer = BytesIO()
-        merged_df.to_csv(buffer, index=False)
-        st.download_button(
-            label="Download Merged Data",
-            data=buffer,
-            file_name="merged_data.csv",
-            mime="text/csv"
-        )
-
     st.success("✅ All files processed successfully!")
 
-# Add footer
-st.markdown("---")
-st.markdown("Built with ❤️ using Streamlit | Data Sweeper Pro v1.0")
+# Footer
+st.markdown("""
+---
+*Created by **Syed Uns Haider Zaidi***
+""")
